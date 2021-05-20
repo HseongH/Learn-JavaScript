@@ -308,7 +308,7 @@ copyObject 함수를 사용해 객체를 복사하면 복사한 객체에서 프
 
 #### 2.5.7 얕은 복사와 깊은 복사
 
-위 copyObject 함수를 사용해 중첩된 객체를 복사한 경우 사본의 중첩 객체의 프로퍼티를 변경하면 원본의 프로퍼티도 변경된다는 문제가 있다.
+위 copyObject 함수를 사용해 중첩된 객체를 복사하는 경우 사본의 중첩 객체의 프로퍼티를 변경하면 원본의 프로퍼티도 변경된다는 문제가 있다.
 
 ```javascript
 var user = {
@@ -371,3 +371,9 @@ console.log(user.details.address, user2.details.address);    // Masan Busan
 deepCopyObject 함수를 통해 객체를 복사한 경우 객체의 내부 객체까지 새로운 데이터를 생성해 할당하기 때문에 사본에서의 프로퍼티 변경이 원본에 영향을 미치지 않는다.
 
 이를 깊은 복사라 한다.
+
+*** 
+
+### 2.6 undefined 와 null
+
+
