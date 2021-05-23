@@ -376,4 +376,92 @@ deepCopyObject 함수를 통해 객체를 복사한 경우 객체의 내부 객�
 
 ### 2.6 undefined 와 null
 
+undefined와 null 모두 자바스크립트에서 '없음'을 나타내는 값이다.
 
+### 2.6.1 undefined
+
+자바스크립트에서 값이 undefined인 경우는 두 가지로 나눌 수 있다.
+
+1. 사용자가 명시적으로 값을 undefined로 지정한 경우
+2. 자바스크립트 엔진이 자동으로 부여하는 경우
+    - 값을 대입하지 않은 변수
+    - 객체 내부의 존재하지 않는 프로퍼티에 접근하려 할 때
+    - return 문이 없거나 호출되지 않는 함수의 실행 결과
+
+```javascript
+var a;
+console.log(a); // undefined
+
+var obj = { a: 1 };
+console.log(obj.a); // 1
+console.log(obj.b); // undefined
+
+var func = function() {}
+var c = func();  // 반환 값이 없으면 undefined를 반환한 것으로 간주
+console.log(c);  // undefined
+```
+
+배열을 선언하고 값을 대입하지 않은 경우는 위와 다르게 동작한다.
+
+```javascript
+var arr1 = [];
+arr1.length = 3;
+console.log(arr1);  // [empty × 3]
+
+var arr2 = new Array(3);
+console.log(arr2);  // [empty × 3]
+
+var arr3 = [undefined, undefined, undefined];
+console.log(arr3)   // [undefined, undefined, undefined]
+```
+
+이처럼 비어있는 요소와 undefined를 할당한 요소는 출력 결과부터 다른 것을 알 수 있다. 비어있는 요소의 경우 순회와 관련된 배열 메서드의 순회 대상에서 제외된다.
+
+```javascript
+var arr1 = [undefined, 1];
+var arr2 = [];
+arr2[1] = 1;
+
+arr1.forEach((v, i) => { console.log(v, i); }); // undefined 0 / 1 1
+arr2.forEach((v, i) => { console.log(v, i); }); // 1 1
+
+arr1.map((v, i) => v + i);  // [NaN, 2]
+arr2.map((v, i) => v + i);  // [empty, 2]
+
+arr1.filter(v => !v);   // [undefined]
+arr2.filter(v => !v);   // []
+
+arr1.reduce((p, c, i) => p + c + i, '');    // "undefined011"
+arr2.reduce((p, c, i) => p + c + i, '');    // "11"
+```
+
+arr2의 0번 인덱스에 값을 추가하지 않았더니 배열을 순회하는 메서드들이 아무런 작업도 수행하지 않고 1번 인덱스로 건너뛴 것을 알 수 있다.
+
+배열도 객체와 같이 특정 인덱스에 값이 저장되면 그때 빈 공간을 할당해 값을 저장하기 때문에 이러한 현상이 발생한다. 즉 값이 지정되지 않은 프로퍼티는 아직 존재하지 않는 프로퍼티이기 때문에 이러한 현상이 발생함을 알 수 있다.
+
+**사용자가 직접 지정하는 undefined와 자바스크립트 엔진이 반환하는 undefined의 차이**
+
+1. 사용자가 직접 지정하는 경우: undefined 자체가 값이다. 변수, 프로퍼티, 키값이 실존하고 데이터 값이 undefined이다.
+2. 자바스크립트 엔진이 반환하는 경우: 변수, 프로퍼티, 키값 자체가 존재하지 않음을 의미한다. 
+
+즉 값으로써의 undefined는 어딘가에 존재하는 데이터인 반면 자바스크립트 엔진이 반환하는 undefined는 문자 그대로 값이 없음을 나타낸다.
+
+### 2.6.2 null
+
+undefined는 사용하는 방식에 따라 의미하는 바가 달라 혼란을 야기할 수 있다. 이 문제를 해결하는 방법은 undefined가 해당되는 경우는 자바스크립트가 반환하는 경우만 존재하도록 두면된다. 즉 변수에 직접 undefined를 할당하지 않는다.
+
+null은 '비어있음'을 명시적으로 나타내기 위해 만들어진 데이터 타입으로 '비어있음'을 명시적으로 나타내야 하는 상황이 생긴다면 null을 사용하면 되겠다.
+
+null은 주의사항이 하나 있는데 바로 typeof null이 object라는 것이다. 이는 자바스크립트 자체 버그이다. 따라서 어떤 변수의 값이 null인지 알아내기 위해서는 typeof 대신 다른 방법을 사용해야 한다.
+
+```javascript
+var n = null;
+console.log(typeof n);   // object
+
+console.log(n == undefined);   // true
+console.log(n == null);    // true
+console.log(n === undefined);   // false
+console.log(n === null);    // true
+```
+
+동등 연산자(==)를 사용하면 null과 undefined가 같다고 판단한다. 따라서 변수가 null인지 판단하기 위해서는 일치 연산자(===)를 사용해야 한다.
